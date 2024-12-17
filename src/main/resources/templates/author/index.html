@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title> Author </title>
+  </head>
+  <body>
+    <a th:href="@{author/form}">Create New</a>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="author : ${authors}">
+          <td th:text="${author.id}"></td>
+          <td th:text="${author.name}"></td>
+          <!-- <td><a th:href="@{author/form(id=${author.id})}">EDIT</a> | <a th:href="@{author/delete(id=${author.id})}">DELETE</a></td> -->
+          <!-- <td><a th:href="@{'author/edit/' + ${author.id}}">EDIT</a> | <a th:href="@{'author/delete/' + ${author.id}}">DELETE</a></td> -->
+          <td style="display: flex;">
+            <a th:href="@{'author/form/' + ${author.id}}">EDIT</a>
+            &nbsp; &nbsp;
+            <form th:action="@{'author/delete/' + ${author.id}}" method="post">
+              <button>DELETE</button>
+            </form>
+          </td>
+          <!-- <td> EDIT | DELETE </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Edit Author Form</title>
+  </head>
+  <body>
+    <form th:action="@{/author/save}" th:object="${author}" method="post"> 
+      <!-- ID -->
+      <input id="id" name="id" placeholder="ID" type="text" th:value="${author.id}" readonly>
+      <!-- NAME -->
+      <input id="name" name="name" placeholder="Name" type="text" th:value="${author.name}">
+      <!-- EMAIL -->
+      <input id="email" name="email" placeholder="Email" type="email" th:value="${author.email}">
+      <!-- SUBMIT BUTTON -->
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

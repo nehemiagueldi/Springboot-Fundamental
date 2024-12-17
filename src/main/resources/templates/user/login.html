@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Login</title>
+  </head>
+  <body>
+    <form th:action="@{/usermanagement/authenticate}" th:object="${login}" method="post"> 
+    <!-- <form th:action="@{/login/save(id=${login.id})}" th:object="${login}" method="post">  -->
+      <!-- EMAIL -->
+      <input id="email" placeholder="Email" type="email" th:field="${login.email}">
+      <!-- PASSWORD -->
+      <input id="password" placeholder="Password" type="password" th:field="${login.password}">
+      <!-- SUBMIT BUTTON -->
+      <button type="submit">Submit</button>
+      <!-- REGISTER -->
+      <a th:href="@{register}">Register</a>
+      <!-- FORGOT PASSWORD -->
+      <a th:href="@{forgotpassword}">Forgot Password</a>
+    </form>
+  </body>
+</html>

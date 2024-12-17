@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title> Book </title>
+  </head>
+  <body>
+    <h2>Welcome, <span th:text="${user.name}"></span></h2>
+    <a th:href="@{book/form}">Create New</a>
+    <a th:href="@{'usermanagement/changepassword/' + ${user.id}}">Change Password</a>
+    <a th:href="@{user/logout}">Logout</a>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Year</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Author</th>
+          <th>Publisher</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="book : ${books}">
+          <td th:text="${book.id}"></td>
+          <td th:text="${book.title}"></td>
+          <td th:text="${book.year}"></td>
+          <td th:text="${book.price}"></td>
+          <td th:text="${book.count}"></td>
+          <td th:text="${book.authorName}"></td>
+          <td th:text="${book.publisherName}"></td>
+          <!-- <td th:text="${book.publisher.name}"></td> -->
+          <!-- <td th:text="${book.author.name}"></td> -->
+          <!-- <td><a th:href="@{book/form(id=${book.id})}">EDIT</a> | <a th:href="@{book/delete(id=${book.id})}">DELETE</a></td> -->
+          <!-- <td><a th:href="@{'book/edit/' + ${book.id}}">EDIT</a> | <a th:href="@{'book/delete/' + ${book.id}}">DELETE</a></td> -->
+          <td style="display: flex;">
+            <a th:href="@{'book/form/' + ${book.id}}">EDIT</a> 
+            &nbsp; &nbsp;
+            <form th:action="@{'book/delete/' + ${book.id}}" method="post">
+              <button>DELETE</button>
+            </form> 
+          </td>
+          <!-- <td> EDIT | DELETE </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
