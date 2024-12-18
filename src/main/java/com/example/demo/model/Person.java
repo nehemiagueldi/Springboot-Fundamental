@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,7 @@ public class Person {
   private Integer phone;
   private String address;
   @OneToMany(mappedBy = "person") //person dari penamaan diclass Invoices Details
+  @JsonIgnore
   private List<InvoicesDetails> invoicesDetails;
   @OneToOne(mappedBy = "person") //person dari penamaan diclass Invoices Details
   private User user;

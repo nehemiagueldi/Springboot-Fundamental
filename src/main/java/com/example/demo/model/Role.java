@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +27,6 @@ public class Role {
   private String name; // admin, user
   private Integer level; // contohnya: 1 = user, 2 = admin
   @OneToMany(mappedBy = "role") //role dari penamaan diclass Invoices Details
+  @JsonIgnore
   private List<User> user;
 }

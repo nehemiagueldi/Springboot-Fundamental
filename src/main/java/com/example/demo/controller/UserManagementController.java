@@ -34,7 +34,7 @@ import com.example.demo.repository.PersonRepository;
 import com.example.demo.repository.ResetPasswordTokenRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.EmailService;
+import com.example.demo.utils.EmailService;
 
 @Controller
 @RequestMapping("usermanagement") // routing (/usermanagement)
@@ -105,12 +105,15 @@ public class UserManagementController {
   @GetMapping("resetpassword")
   public String resetPassword(@RequestParam String token, Model model){
     ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token);
-
-    ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO();
-    resetPasswordDTO.setEmail(resetPasswordToken.getUser().getPerson().getEmail());
-
-    model.addAttribute("reset", resetPasswordDTO);
-    return "user/resetpassword"; // path atau lokasi yang menampilkan html
+    if (resetPasswordToken != null && LocalDateTime.now().isBefore(resetPasswordToken.getExpiredDate())) {
+      ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO();
+      resetPasswordDTO.setEmail(resetPasswordToken.getUser().getPerson().getEmail());
+  
+      model.addAttribute("reset", resetPasswordDTO);
+      return "user/resetpassword"; // path atau lokasi yang menampilkan html
+    } else {
+      return "redirect:/usermanagement/forgotpassword"; // kembalikan ke halaman forgotpassword untuk send link kembali
+    }
   }
 
   @PostMapping("reset")
@@ -125,6 +128,7 @@ public class UserManagementController {
 
     resetPasswordTokenRepository.delete(resetPasswordToken);
 
+    // Email Confirmation
     String email = user.getPerson().getEmail();
     String subject = "Password Successfully Reset " + LocalDate.now();
     String body = "Hi " + user.getPerson().getName() + ",\n\n"
