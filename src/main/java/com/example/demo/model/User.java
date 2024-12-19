@@ -27,6 +27,7 @@ public class User {
   @Id // PK
   private Integer id;
   @Column(length = 60)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   @ManyToOne
   @JoinColumn(name = "role_id", referencedColumnName = "id")

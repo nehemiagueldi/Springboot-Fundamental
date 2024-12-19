@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +29,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   @Query("SELECT u FROM User u JOIN u.person p WHERE p.email = :userEmail")
   public User findByEmail(@Param(value = "userEmail") String userEmail);
 
+  // public Optional<User> findTopByEmail(String email);
 }
