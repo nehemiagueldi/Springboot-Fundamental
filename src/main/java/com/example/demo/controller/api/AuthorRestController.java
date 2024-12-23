@@ -13,6 +13,7 @@ import com.example.demo.model.Author;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.utils.CustomResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -37,12 +38,26 @@ public class AuthorRestController {
     Author newAuthor = new Author();
     newAuthor.setName(author.getName());
     newAuthor.setEmail(author.getEmail());
+    newAuthor.setIsActive(author.getIsActive() != null ? author.getIsActive() : false);
+    // newAuthor.setIsActive(author.getIsActive());
 
     authorRepository.save(newAuthor);
     return CustomResponse.generate(HttpStatus.OK, "Data Berhasil Disimpan", authorRepository.save(newAuthor));
   }
 
-  @DeleteMapping("author/{id}")
+  @PutMapping("author/edit/{id}")
+  public  ResponseEntity<Object> editAuthor(@RequestBody Author author) {
+    Author existAuthor = authorRepository.findById(author.getId()).orElse(null);
+
+    existAuthor.setId(author.getId());
+    existAuthor.setName(author.getName());
+    existAuthor.setEmail(author.getEmail());
+    authorRepository.save(existAuthor);
+
+    return CustomResponse.generate(HttpStatus.OK, "Data Berhasil Diubah", authorRepository.save(existAuthor));
+  }
+
+  @DeleteMapping("author/delete/{id}")
   public ResponseEntity<Object> deleteAuthor(@PathVariable Integer id){
     Author author = authorRepository.findById(id).orElse(null);
     if (author != null) {
@@ -61,5 +76,16 @@ public class AuthorRestController {
     } else {
       return CustomResponse.generate(HttpStatus.OK, "Data Tidak Ditemukan");
     }
+  }
+
+  @PutMapping("author/status/{id}")
+  public ResponseEntity<Object> updateActiveStatus(@PathVariable Integer id, @RequestBody Author author) {
+    Boolean isActive = author.getIsActive();
+    Author authorStatus = authorRepository.findById(id).orElse(null);
+
+    authorStatus.setIsActive(isActive);
+    authorRepository.save(authorStatus);
+
+    return CustomResponse.generate(HttpStatus.OK, "Status berhasil diubah");
   }
 }

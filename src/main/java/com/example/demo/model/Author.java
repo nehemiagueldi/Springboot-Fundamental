@@ -25,6 +25,7 @@ public class Author {
   private Integer id;
   private String name;
   private String email;
+  private Boolean isActive;
   @OneToMany(mappedBy = "author") //author dari penamaan diclass Book
   @JsonIgnore // buat json ignore
   private List<Book> books;
