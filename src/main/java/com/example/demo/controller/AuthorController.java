@@ -31,7 +31,7 @@ public class AuthorController {
   }
 
   // localhost:8080/author/form -> create & update
-  @GetMapping(value = {"form", "form/{id}"})
+  @PostMapping(value = {"form", "form/{id}"})
   public String form(@PathVariable(value = "id", required = false) Integer id, Model model){
     if (id != null) {
       model.addAttribute("author", authorRepository.findById(id).get()); // update
