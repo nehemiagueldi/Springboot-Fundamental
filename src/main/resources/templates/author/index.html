@@ -9,16 +9,17 @@
   <body>
     <div class="container mt-5">
       <div class="d-flex gap-5">
-        <form th:action="@{author/form}" method="POST">
+        <!-- <form th:action="@{author/form}" method="POST">
           <button class="btn btn-primary">Create New</button>
-        </form>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Launch demo modal</button>
+        </form> -->
+        <button type="button" class="btn btn-primary" onclick="addAuthor()">Add Author</button>
       </div>
       <!-- <a th:href="@{author/form}">Create New</a> -->
       <!-- Button trigger modal -->
       <table id="myTable" class="table display cell-border">
         <thead>
           <tr>
+            <th>#</th>
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
@@ -46,19 +47,19 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title fs-5" id="authorModalLabel">Add New Author</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <!-- ID -->
-            <div class="mb-2">
-              <label for="id">ID:</label>
+            <div class="mb-2" hidden>
+              <label for="id" hidden>ID:</label>
               <div>
-                <input id="id" placeholder="ID" type="text" class="form-control" disabled />
+                <input id="id" placeholder="ID" type="text" class="form-control" hidden />
               </div>
             </div>
             <!-- NAME -->
@@ -78,7 +79,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary">Save</button>
           </div>
         </div>
       </div>
@@ -98,6 +99,25 @@
   </script>
 
   <script>
+    function addAuthor() {
+      $('#id').val('');
+      $('#name').val('');
+      $('#email').val('');
+
+      $('#authorModal').modal('show');
+    }
+
+    function saveAuthor(){
+      let id = $('#id').val();
+      let name = $('#name').val();
+      let email = $('#email').val();
+
+      if (!name || !email) {
+        alert('Please fill all required fields!');
+        return;
+      }
+    }
+
     let table = new DataTable("#myTable", {
       lengthMenu: [5, 10, 25, 50], // entries per page
       // pageLength: 50 // Jumlah baris yang akan ditampilkan pada satu halaman
@@ -105,7 +125,7 @@
       columnDefs: [
         // jika tidak ingin menampilkan kolom tertentu
         {
-          targets: [0], // Nomor kolom (index)
+          targets: [1], // Nomor kolom (index)
           visible: false, // Atur visibilitas kolom
         },
       ],
@@ -138,6 +158,12 @@
         dataSrc: "data",
       },
       columns: [
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return meta.row + 1;
+          }
+        },
         { data: "id", title: "ID" },
         { data: "name", title: "Name" },
         { data: "email", title: "Email" },
