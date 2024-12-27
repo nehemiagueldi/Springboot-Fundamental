@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,5 +37,6 @@ public class Book {
   @JoinColumn(name = "author_id", referencedColumnName = "id")
   private Author author;
   @OneToMany(mappedBy = "book") //book dari penamaan diclass Invoices Details
+  @JsonIgnore
   List<InvoicesDetails> invoicesDetails;
 }

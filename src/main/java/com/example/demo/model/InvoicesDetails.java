@@ -5,6 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,7 @@ public class InvoicesDetails {
   @JoinColumn(name = "book_id", referencedColumnName = "id")
   private Book book;
   @ManyToOne
+  @JsonIgnore
   @JoinColumn(name = "invoices_id", referencedColumnName = "id")
   private Invoices invoices;
 }

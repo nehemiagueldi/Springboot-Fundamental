@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,6 @@ public class Publisher {
   private Integer phone;
   private String address;
   @OneToMany(mappedBy = "publisher") //publisher dari penamaan diclass Book
-  // @JsonIgnore // buat json ignore
+  @JsonIgnore // buat json ignore
   private List<Book> books;
 }

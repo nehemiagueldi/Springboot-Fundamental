@@ -32,5 +32,6 @@ public class Person {
   @JsonIgnore
   private List<InvoicesDetails> invoicesDetails;
   @OneToOne(mappedBy = "person") //person dari penamaan diclass Invoices Details
+  @JsonIgnore
   private User user;
 }

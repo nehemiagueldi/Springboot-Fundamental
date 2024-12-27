@@ -1,0 +1,281 @@
+<html>
+  <head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="d-flex gap-5">
+        <button type="button" class="btn btn-primary" onclick="addAuthor()">Add Author</button>
+      </div>
+      <!-- Button trigger modal -->
+      <table id="paymentTable" class="table display cell-border">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="authorModal" tabindex="-1" aria-labelledby="authorModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="authorModalLabel">Author</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- ID -->
+            <div class="mb-2" hidden>
+              <label for="id" hidden>ID:</label>
+              <div>
+                <input id="id" placeholder="ID" type="text" class="form-control" hidden />
+              </div>
+            </div>
+            <!-- NAME -->
+            <div class="mb-2">
+              <label for="name">Name</label>
+              <div>
+                <input id="name" placeholder="Name" type="text" class="form-control" />
+              </div>
+            </div>
+            <!-- EMAIL -->
+            <div class="mb-2">
+              <label for="email">Email</label>
+              <div>
+                <input id="email" placeholder="Email" type="email" class="form-control" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="saveAuthor()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.3/dist/sweetalert2.all.min.js"></script>
+
+  <script>
+    function addAuthor() {
+      $("#id").val("");
+      $("#name").val("");
+      $("#email").val("");
+      // $('#status').val('');
+      $('#authorModalLabel').text('Add Author');
+
+      $("#authorModal").modal("show");
+    }
+
+    function editAuthor(id) {
+      $('#authorModalLabel').text('Edit Author');
+      $.ajax({
+        url: "/api/author/" + id,
+        type: "GET",
+        success: function (response) {
+          const authorData = response.data;
+          $("#id").val(authorData.id);
+          $("#name").val(authorData.name);
+          $("#email").val(authorData.email);
+
+          $("#authorModal").modal("show");
+        },
+        error: function (xhr, status, error) {
+          alert("Error fetching data: " + error);
+        },
+      });
+    }
+
+    function saveAuthor() {
+      let id = $("#id").val();
+      let name = $("#name").val();
+      let email = $("#email").val();
+      // let status = $('input[name="status"]:checked').val();
+
+      if (!name || !email) {
+        Swal.fire({
+          icon: "warning",
+          title: "Validation Error",
+          text: "Please fill all required fields!",
+          confirmButtonText: "OK",
+        });
+        return;
+      } else if (!id) {
+        $.ajax({
+          url: "/api/author/add",
+          type: "POST",
+          data: JSON.stringify({
+            name: name,
+            email: email,
+            // isActive: status
+          }),
+          contentType: "application/json",
+          success: function (response) {
+            $("#authorModal").modal("hide");
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Data Author baru berhasil disimpan!",
+              timer: 2500,
+            });
+            $("#paymentTable").DataTable().ajax.reload();
+          },
+          error: function (xhr, status, error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Gagal menyimpan data Author: " + error,
+            });
+          },
+        });
+      } else {
+        $.ajax({
+          url: "/api/author/edit/" + id,
+          type: "PUT",
+          data: JSON.stringify({
+            id: id,
+            name: name,
+            email: email,
+            // isActive: status
+          }),
+          contentType: "application/json",
+          success: function (response) {
+            $("#authorModal").modal("hide");
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Data Author baru berhasil diubah!",
+              timer: 2500,
+            });
+            $("#paymentTable").DataTable().ajax.reload();
+          },
+          error: function (xhr, status, error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Gagal mengubah data Author: " + error,
+            });
+          },
+        });
+      }
+    }
+
+    function deleteAuthor(id) {
+      Swal.fire({
+        title: "Apakah anda yakin?",
+        text: "Apakah anda ingin menghapus data Author ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "/api/author/delete/" + id,
+            type: "DELETE",
+            success: function (response) {
+              $("#paymentTable").DataTable().ajax.reload();
+              Swal.fire({
+                icon: "success",
+                title: "Deleted!",
+                text: "Data Author berhasil dihapus.",
+                timer: 2500,
+              });
+            },
+            error: function (xhr, status, error) {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Gagal menghapus data Author: " + error,
+              });
+            },
+          });
+        } else {
+          return;
+        }
+      });
+    }
+
+    let table = new DataTable("#paymentTable", {
+      lengthMenu: [5, 10, 25, 50], // entries per page
+      columnDefs: [ // jika tidak ingin menampilkan kolom tertentu
+        {
+          targets: [1], // Nomor kolom (index)
+          visible: false, // Atur visibilitas kolom
+        },
+        {
+          targets: [2], // Nomor kolom (index)
+          visible: false, // Atur visibilitas kolom
+        },
+      ],
+      layout: { // custom layout
+        topStart: {
+          search: {
+            placeholder: "Search",
+          },
+        },
+        topEnd: "pageLength",
+      },
+      caption: "Table 1: Payments",
+      responsive: true,
+      processing: true, // untuk serverside processing
+      serverSide: true, // untuk serverside processing
+      searching: true,
+      ajax: {
+        url: "/api/transaction",
+        type: "GET",
+        data: function(param) { // untuk serverside processing
+          param.search = param.search.value || ""
+        },
+        dataSrc: "data",
+      },
+      columns: [
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return meta.row + 1;
+          },
+        },
+        { data: 0, title: "Payment ID" }, // sesuain index diresponse postman
+        { data: 1, title: "Invoice ID" },
+        { data: 2, title: "Transaction Date" },
+        { data: 3, title: "Payment Method" },
+        { data: 4, title: "Payment Status" },
+        { data: 5, title: "Bank Details" },
+        { data: 6, title: "Total Price" },
+        { data: 7, title: "Person Name" },
+        {
+          data: null,
+          title: "Action",
+          render: function (row) {
+            return `
+              <button class="btn btn-md btn-warning" onclick="editAuthor(${row.id})">Edit</button>
+              <button class="btn btn-md btn-danger" onclick="deleteAuthor(${row.id})">Delete</button>
+              `;
+          },
+        },
+      ],
+    });
+  </script>
+</html>

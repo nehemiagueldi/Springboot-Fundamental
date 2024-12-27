@@ -6,12 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "tb_payment") //define sebuah table didatabase
+@Entity
+@Table(name = "tb_payment") //define sebuah table didatabase
 @Data //anotasi data, gantinya setter getter dari lombok
 @AllArgsConstructor //constructor dengan parameter semua properti
 @NoArgsConstructor //constructor tidak menggunakan parameter
@@ -25,7 +28,9 @@ public class Payment {
   @ManyToOne
   @JoinColumn(name = "payment_status_id", referencedColumnName = "id")
   private PaymentStatus paymentStatus;
-  // private Invoices invoices;
+  @OneToOne
+  @JoinColumn(name = "invoices_id", referencedColumnName = "id")
+  private Invoices invoices;
   @ManyToOne
   @JoinColumn(name = "bank_details_id", referencedColumnName = "id")
   private BankDetails bankDetails;
