@@ -13,7 +13,7 @@ public interface TransactionRepository extends JpaRepository<Payment, String> {
     SELECT 
       tb_payment.id AS payment_id, 
       tb_invoices.id AS invoice_id,
-      tb_payment.transaction_date AS "transaction date", 
+      CONCAT(DATE_FORMAT(tb_payment.transaction_date, '%d %b %Y, %H:%i'), ' WIB') AS "transaction date", 
       tb_payment_method.name AS payment_method, 
       tb_payment_status.name AS payment_status, 
       tb_bank_details.name AS bank_details,
