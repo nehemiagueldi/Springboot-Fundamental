@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,28 +16,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity //define sebuah table didatabase
-@Table(name = "tb_book")
+@Table(name = "tb_asset")
 @Data //anotasi data, gantinya setter getter dari lombok
 @AllArgsConstructor //constructor dengan parameter semua properti
 @NoArgsConstructor //constructor tidak menggunakan parameter
-public class Book {
+public class Asset {
   @Id // PK
   @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
   private Integer id;
-  private String title;
-  private Integer year;
-  private Integer price;
-  private Integer count;
-  @ManyToOne
-  @JoinColumn(name = "asset_id", referencedColumnName = "id")
-  private Asset asset;
-  @ManyToOne
-  @JoinColumn(name = "publisher_id", referencedColumnName = "id")
-  private Publisher publisher;
-  @ManyToOne
-  @JoinColumn(name = "author_id", referencedColumnName = "id")
-  private Author author;
-  @OneToMany(mappedBy = "book") //book dari penamaan diclass Invoices Details
+  private String path;
+  @OneToMany(mappedBy = "asset") //asset dari penamaan dimodel book
   @JsonIgnore
-  private List<InvoicesDetails> invoicesDetails;
+  private List<Book> books;
 }

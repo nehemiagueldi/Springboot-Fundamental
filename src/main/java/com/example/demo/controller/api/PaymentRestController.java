@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.dto.TransactionDTO;
-import com.example.demo.repository.PaymentRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.utils.CustomResponse;
 
